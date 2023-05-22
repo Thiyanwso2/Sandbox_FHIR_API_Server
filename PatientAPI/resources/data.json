@@ -1,0 +1,157 @@
+[
+  {
+    "resourceType": "Patient",
+    "id": "591653",
+    "meta": {
+      "versionId": "1",
+      "lastUpdated": "2020-01-21T05:30:29.575+00:00",
+      "source": "#q6YX9FUQ7Kn5auYe"
+    },
+    "text": {
+      "status": "generated",
+      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><div class=\"hapiHeaderText\">Bob <b>ALEXANDER </b></div><table class=\"hapiPropertyTable\"><tbody><tr><td>Identifier</td><td>107b71d1-e235-4d52-834c-d3562f15e175</td></tr></tbody></table></div>"
+    },
+    "identifier": [ {
+      "type": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/v2/0203",
+          "code": "MR"
+        } ]
+      },
+      "value": "107b71d1-e235-4d52-834c-d3562f15e175"
+    } ],
+    "name": [ {
+      "family": "Alexander",
+      "given": [ "Bob" ]
+    } ]
+  },
+  {
+    "resourceType": "Patient",
+    "id": "591661",
+    "meta": {
+      "versionId": "1",
+      "lastUpdated": "2020-01-21T05:30:30.392+00:00",
+      "source": "#uAn5EXox3aKjch3e"
+    },
+    "text": {
+      "status": "generated",
+      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><div class=\"hapiHeaderText\">Bob <b>ALEXANDER </b></div><table class=\"hapiPropertyTable\"><tbody><tr><td>Identifier</td><td>cc7dff50-4b7f-4faa-8f58-e63b3f6ad4ff</td></tr></tbody></table></div>"
+    },
+    "identifier": [ {
+      "type": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/v2/0203",
+          "code": "MR"
+        } ]
+      },
+      "value": "cc7dff50-4b7f-4faa-8f58-e63b3f6ad4ff"
+    } ],
+    "name": [ {
+      "family": "Alexander",
+      "given": [ "Bob" ]
+    } ]
+  },
+  {
+    "resourceType": "Patient",
+    "id": "1199057",
+    "meta": {
+      "versionId": "3",
+      "lastUpdated": "2022-03-18T08:51:58.406+00:00",
+      "source": "#V7EXNtQKCRQJU5D2"
+    },
+    "text": {
+      "status": "generated",
+      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> <div class=\"hapiHeaderText\">Herr Peter <b>HANGOVER </b> Dr. </div> <table class=\"hapiPropertyTable\"> <tbody> <tr> <td>Identifier</td> <td>5246754</td> </tr> <tr> <td>Address</td> <td> <span>CO </span> <br/> <span>Str. 3a </span> <br/> <span>po </span> <br/> <span>Stockholm </span> </td> </tr> <tr> <td>Date of birth</td> <td> <span>24 December 1930</span> </td> </tr> </tbody> </table> </div>"
+    },
+    "identifier": [ {
+      "system": "urn:oid:2.16.756.5.32",
+      "value": "5246754"
+    }, {
+      "system": "74d7925b-fe45-4d7e-aefe-68f171aa0756",
+      "value": "74d7925b-fe45-4d7e-aefe-68f171aa0756"
+    } ],
+    "name": [ {
+      "family": "Hangover",
+      "given": [ "Pedro" ],
+      "prefix": [ "Herr" ],
+      "suffix": [ "Dr." ]
+    } ],
+    "gender": "male",
+    "birthDate": "1930-12-24",
+    "deceasedDateTime": "2018-12-27T00:00:00+01:00",
+    "address": [ {
+      "line": [ "CO", "Str. 3a", "po" ],
+      "city": "Stockholm",
+      "postalCode": "3333"
+    } ],
+    "maritalStatus": {
+      "coding": [ {
+        "system": "http://hl7.org/fhir/ValueSet/marital-status",
+        "code": "S"
+      } ]
+    },
+    "active": true
+  },
+  {"resourceType": "Patient",
+  "meta": {
+      "versionId": "3",
+      "lastUpdated": "2022-03-18T08:51:58.406+00:00",
+      "source": "#V7EXNtQKCRQJU5D2",
+      "profile": [
+          "http://hl7.org/fhir/StructureDefinition/Patient"
+      ]
+  },
+  "gender": "male",
+  "deceasedDateTime": "2018-12-27T00:00:00+01:00",
+  "id": "1199057",
+  "text": {
+      "status": "generated",
+      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> <div class=\"hapiHeaderText\">Herr Peter <b>HANGOVER </b> Dr. </div> <table class=\"hapiPropertyTable\"> <tbody> <tr> <td>Identifier</td> <td>5246754</td> </tr> <tr> <td>Address</td> <td> <span>CO </span> <br/> <span>Str. 3a </span> <br/> <span>po </span> <br/> <span>Stockholm </span> </td> </tr> <tr> <td>Date of birth</td> <td> <span>24 December 1930</span> </td> </tr> </tbody> </table> </div>"
+  },
+  "identifier": [
+      {
+          "system": "urn:oid:2.16.756.5.32",
+          "value": "5246754"
+      },
+      {
+          "system": "74d7925b-fe45-4d7e-aefe-68f171aa0756",
+          "value": "74d7925b-fe45-4d7e-aefe-68f171aa0756"
+      }
+  ],
+  "address": [
+      {
+          "line": [
+              "CO",
+              "Str. 3a",
+              "po"
+          ],
+          "city": "Stockholm",
+          "postalCode": "3333"
+      }
+  ],
+  "birthDate": "1930-12-24",
+  "name": [
+      {
+          "family": "Hangover",
+          "given": [
+              "Pedro"
+          ],
+          "prefix": [
+              "Herr"
+          ],
+          "suffix": [
+              "Dr."
+          ]
+      }
+  ],
+  "maritalStatus": {
+      "coding": [
+          {
+              "system": "http://hl7.org/fhir/ValueSet/marital-status",
+              "code": "S"
+          }
+      ]
+  },
+  "active": false
+}]
+  
