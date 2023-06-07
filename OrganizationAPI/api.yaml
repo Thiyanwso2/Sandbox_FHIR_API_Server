@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: Basic CRUD API
+  version: 1.0.0
+paths:
+  /fhir/r4/Organization:
+    get:
+      summary: Retrieve all items
+      responses:
+        "200":
+          description: OK
+
+    post:
+      summary: Create a new item
+
+      responses:
+        "201":
+          description: Created
+  /fhir/r4/Organization/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: ID of the item to retrieve/update/delete
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve an item by ID
+      responses:
+        "200":
+          description: OK
+
+        "404":
+          description: Item not found
+    delete:
+      summary: Delete an item by ID
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Item not found
