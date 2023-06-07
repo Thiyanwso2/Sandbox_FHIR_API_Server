@@ -1,0 +1,50 @@
+[
+  {
+    "resourceType": "Practitioner",
+    "id": "1853",
+    "meta": {
+      "versionId": "1",
+      "lastUpdated": "2019-09-21T01:17:57.455+00:00",
+      "source": "#fb41b33d634e2037"
+    },
+    "identifier": [
+      {
+        "use": "official",
+        "value": "hd3x0YUzVejbUaMeFaVx00zGmkaviov6kV4o9MIeCoo="
+      }
+    ],
+    "active": true
+  },
+  {
+    "resourceType": "Practitioner",
+    "id": "1859",
+    "meta": {
+      "versionId": "1",
+      "lastUpdated": "2019-09-21T01:18:00.677+00:00",
+      "source": "#e213401601169daa"
+    },
+    "identifier": [
+      {
+        "use": "official",
+        "value": "GrqaCmzCxXoJsvZTJttwWNliVXi6JURuOZ/sbqje7mQ="
+      }
+    ],
+    "active": true
+  },
+  {
+    "resourceType": "Practitioner",
+    "id": "1865",
+    "meta": {
+      "versionId": "1",
+      "lastUpdated": "2019-09-21T01:18:03.452+00:00",
+      "source": "#eb4e511d7ba0b12e"
+    },
+    "identifier": [
+      {
+        "use": "official",
+        "value": "GrqaCmzCxXoJsvZTJttwWNliVXi6JURuOZ/sbqje7mQ="
+      }
+    ],
+    "active": true
+  }
+]
