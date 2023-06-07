@@ -1,0 +1,12 @@
+[package]
+org = "ballerinax"
+name = "OrganizationAPI"
+version = "1.0.2"
+export = ["OrganizationAPI"]
+distribution = "2201.5.0"
+authors = ["Ballerina"]
+keywords = ["Healthcare","FHIR","Organization","r4","international"]
+repository = "https://github.com/ballerina-platform/module-ballerinax-health.fhir.templates"
+
+[build-options]
+observabilityIncluded = true
