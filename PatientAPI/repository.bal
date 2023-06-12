@@ -11,11 +11,9 @@
 
 import ballerinax/health.fhir.r4;
 import ballerina/random;
-// import ballerina/log;
-// import ballerina/io;
+import ballerina/log;
+import ballerina/io;
 import ballerina/http;
-
-// import ballerina/io;
 
 // Initializes an `isolated` variable using
 // an `isolated` expression.
@@ -66,9 +64,9 @@ isolated function get(string id) returns r4:FHIRError|r4:Patient {
         if (data.hasKey(id)) {
             clone = data.get(id).clone();
         } else {
-            return r4:createFHIRError("No resource found for the privided id", r4:CODE_SEVERITY_ERROR,
+            return r4:createFHIRError("No resource found for the provided id", r4:CODE_SEVERITY_ERROR,
             r4:PROCESSING_NOT_FOUND,
-            diagnostic = "No resource found for the privided id: " + id,
+            diagnostic = "No resource found for the provided id: " + id,
             httpStatusCode = http:STATUS_BAD_REQUEST
             );
         }
@@ -98,12 +96,11 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
         return patients;
     }
 
+    // If In-memory patients map is empty skip the search process
+    if patients.length() == 0 {
+        return patients;
+    }
     foreach var searchParam in filteredParams {
-
-        // If In-memory patients map is empty skip the search process
-        if patients.length() == 0 {
-            break;
-        }
 
         // Check whether the current(loop) search param is in the supported search param list
         string[] allowedsearchParam = supportedParams.filter(s => s == searchParam);
@@ -171,17 +168,17 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
 }
 
 // This init method will read some initial patient resource from a file and initialise the internal map
-// function init() returns error? {
-//     io:print("Reading the patient data from resources/data.json and initialising the in memory patients map");
+function init() returns error? {
+    io:print("Reading the patient data from resources/data.json and initialising the in memory patients map");
 
-//     json[]|error patientsArray = <json[]>check io:fileReadJson("resources/data.json");
+    json[]|error patientsArray = <json[]>check io:fileReadJson("resources/data.json");
 
-//     if patientsArray is error {
-//         log:printError("Something went wrong", patientsArray);
+    if patientsArray is error {
+        log:printError("Something went wrong", patientsArray);
 
-//     } else {
-//         foreach json res in patientsArray {
-//             _ = check addJson(res);
-//         }
-//     }
-// }
+    } else {
+        foreach json res in patientsArray {
+            _ = check addJson(res);
+        }
+    }
+}
