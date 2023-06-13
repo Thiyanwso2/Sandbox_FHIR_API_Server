@@ -169,9 +169,9 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
 
 // This init method will read some initial patient resource from a file and initialise the internal map
 function init() returns error? {
-    io:print("Reading the patient data from resources/data.json and initialising the in memory patients map");
+    io:print("Reading the patient data from data.json and initialising the in memory patients map");
 
-    json[]|error patientsArray = <json[]>check io:fileReadJson("resources/data.json");
+    json[]|error patientsArray = <json[]>check io:fileReadJson("data.json");
 
     if patientsArray is error {
         log:printError("Something went wrong", patientsArray);
