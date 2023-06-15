@@ -11,14 +11,8 @@
 
 import ballerinax/health.fhir.r4;
 import ballerina/random;
-// import ballerina/log;
-// import ballerina/io;
 import ballerina/http;
-
-// import ballerina/io;
-
-// Initializes an `isolated` variable using
-// an `isolated` expression.
+import ballerina/time;
 
 isolated map<r4:Patient> data = {};
 
@@ -37,24 +31,23 @@ isolated function addJson(json patient) returns r4:FHIRError|string {
     }
 }
 
-isolated function add(r4:Patient patient) returns r4:FHIRError|string {
+public isolated function add(r4:Patient patient) returns r4:FHIRError|string {
     lock {
-        string? id = patient.id ?: "";
-        if id is "" {
-            int|random:Error randomInteger = random:createIntInRange(100000, 1000000);
+        int|random:Error randomInteger = random:createIntInRange(100000, 1000000);
 
-            if randomInteger is random:Error {
-                return r4:createFHIRError("Something went wrong while processing the request",
+        if randomInteger is random:Error {
+            return r4:createFHIRError("Something went wrong while processing the request",
                 r4:ERROR,
                 r4:PROCESSING);
-            }
-
-            string randomId = randomInteger.toBalString();
-            patient.id = randomId;
-            data[randomId] = patient.clone();
-        } else {
-            data[<string>patient.id] = patient.clone();
         }
+        if data.length() >= 500{
+            //return error
+        }
+
+        string randomId = randomInteger.toBalString();
+        patient.id = randomId;
+        patient.meta.lastUpdated = time:utcToString(time:utcNow());
+        data[randomId] = patient.clone();
         return <string>patient.id;
     }
 }
@@ -162,6 +155,10 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
                         where entry["active"] == boolValue
                         select entry;
                     filteredList.push(...result);
+
+                    if filteredList.length() > 20{
+                        break;
+                    }
                 }
             }
             patients = filteredList;
@@ -169,6 +166,21 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
     }
     return patients;
 }
+
+public isolated function getAll() returns r4:Patient[] {
+    lock {
+        return data.clone().toArray();
+    }
+}
+
+public isolated function delete(string id) {
+    lock {
+        map<r4:Patient> clone = data.clone();
+        _ = clone.hasKey(id) ? clone.remove(id) : "";
+        data = clone.clone();
+    }
+}
+
 
 // This init method will read some initial patient resource from a file and initialise the internal map
 // function init() returns error? {
@@ -185,3 +197,4 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
 //         }
 //     }
 // }
+
