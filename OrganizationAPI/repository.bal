@@ -14,6 +14,7 @@ import ballerina/random;
 // import ballerina/log;
 // import ballerina/io;
 import ballerina/http;
+import ballerina/time;
 
 // Initializes an `isolated` variable using
 // an `isolated` expression.
@@ -35,24 +36,23 @@ isolated function addJson(json organization) returns r4:FHIRError|string {
     }
 }
 
-isolated function add(r4:Organization organization) returns r4:FHIRError|string {
+public isolated function add(r4:Organization organization) returns r4:FHIRError|string {
     lock {
-        string? id = organization.id ?: "";
-        if id is "" {
-            int|random:Error randomInteger = random:createIntInRange(100000, 1000000);
+        int|random:Error randomInteger = random:createIntInRange(100000, 1000000);
 
-            if randomInteger is random:Error {
-                return r4:createFHIRError("Something went wrong while processing the request",
+        if randomInteger is random:Error {
+            return r4:createFHIRError("Something went wrong while processing the request",
                 r4:ERROR,
                 r4:PROCESSING);
-            }
-
-            string randomId = randomInteger.toBalString();
-            organization.id = randomId;
-            data[randomId] = organization.clone();
-        } else {
-            data[<string>organization.id] = organization.clone();
         }
+        if data.length() >= 500 {
+            //return error
+        }
+
+        string randomId = randomInteger.toBalString();
+        organization.id = randomId;
+        organization.meta.lastUpdated = time:utcToString(time:utcNow());
+        data[randomId] = organization.clone();
         return <string>organization.id;
     }
 }
@@ -158,10 +158,27 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
                     filteredList.push(...result);
                 }
             }
+            if filteredList.length() > 20 {
+                break;
+            }
             organizations = filteredList;
         }
     }
     return organizations;
+}
+
+public isolated function getAll() returns r4:Organization[] {
+    lock {
+        return data.clone().toArray();
+    }
+}
+
+public isolated function delete(string id) {
+    lock {
+        map<r4:Organization> clone = data.clone();
+        _ = clone.hasKey(id) ? clone.remove(id) : "";
+        data = clone.clone();
+    }
 }
 
 // This init method will read some initial organization resource from a file and initialise the internal map

@@ -14,9 +14,7 @@ import ballerina/random;
 // import ballerina/log;
 // import ballerina/io;
 import ballerina/http;
-
-// Initializes an `isolated` variable using
-// an `isolated` expression.
+import ballerina/time;
 
 isolated map<r4:Practitioner> data = {};
 
@@ -35,24 +33,23 @@ isolated function addJson(json practitioner) returns r4:FHIRError|string {
     }
 }
 
-isolated function add(r4:Practitioner practitioner) returns r4:FHIRError|string {
+public isolated function add(r4:Practitioner practitioner) returns r4:FHIRError|string {
     lock {
-        string? id = practitioner.id ?: "";
-        if id is "" {
-            int|random:Error randomInteger = random:createIntInRange(100000, 1000000);
+        int|random:Error randomInteger = random:createIntInRange(100000, 1000000);
 
-            if randomInteger is random:Error {
-                return r4:createFHIRError("Something went wrong while processing the request",
+        if randomInteger is random:Error {
+            return r4:createFHIRError("Something went wrong while processing the request",
                 r4:ERROR,
                 r4:PROCESSING);
-            }
-
-            string randomId = randomInteger.toBalString();
-            practitioner.id = randomId;
-            data[randomId] = practitioner.clone();
-        } else {
-            data[<string>practitioner.id] = practitioner.clone();
         }
+        if data.length() >= 500 {
+            //return error
+        }
+
+        string randomId = randomInteger.toBalString();
+        practitioner.id = randomId;
+        practitioner.meta.lastUpdated = time:utcToString(time:utcNow());
+        data[randomId] = practitioner.clone();
         return <string>practitioner.id;
     }
 }
@@ -151,10 +148,27 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
                     filteredList.push(...result);
                 }
             }
+            if filteredList.length() > 20 {
+                break;
+            }
             practitioners = filteredList;
         }
     }
     return practitioners;
+}
+
+public isolated function getAll() returns r4:Practitioner[] {
+    lock {
+        return data.clone().toArray();
+    }
+}
+
+public isolated function delete(string id) {
+    lock {
+        map<r4:Practitioner> clone = data.clone();
+        _ = clone.hasKey(id) ? clone.remove(id) : "";
+        data = clone.clone();
+    }
 }
 
 // This init method will read some initial practitioner resource from a file and initialise the internal map
