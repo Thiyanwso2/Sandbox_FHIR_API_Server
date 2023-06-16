@@ -11,8 +11,6 @@
 
 import ballerinax/health.fhir.r4;
 import ballerina/random;
-// import ballerina/log;
-// import ballerina/io;
 import ballerina/http;
 import ballerina/time;
 
@@ -182,18 +180,3 @@ public isolated function delete(string id) {
     }
 }
 
-// This init method will read some initial patient resource from a file and initialise the internal map
-// function init() returns error? {
-//     io:print("Reading the patient data from resources/data.json and initialising the in memory patients map");
-
-//     json[]|error patientsArray = <json[]>check io:fileReadJson("resources/data.json");
-
-//     if patientsArray is error {
-//         log:printError("Something went wrong", patientsArray);
-
-//     } else {
-//         foreach json res in patientsArray {
-//             _ = check addJson(res);
-//         }
-//     }
-// }

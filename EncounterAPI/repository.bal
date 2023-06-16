@@ -11,8 +11,6 @@
 
 import ballerinax/health.fhir.r4;
 import ballerina/random;
-// import ballerina/log;
-// import ballerina/io;
 import ballerina/http;
 import ballerina/time;
 
@@ -169,19 +167,3 @@ public isolated function delete(string id) {
         data = clone.clone();
     }
 }
-
-// This init method will read some initial encounter resource from a file and initialise the internal map
-// function init() returns error? {
-//     io:print("Reading the encounter data from resources/data.json and initialising the in memory encounters map");
-
-//     json[]|error encountersArray = <json[]>check io:fileReadJson("resources/data.json");
-
-//     if encountersArray is error {
-//         log:printError("Something went wrong", encountersArray);
-
-//     } else {
-//         foreach json res in encountersArray {
-//             _ = check addJson(res);
-//         }
-//     }
-// }

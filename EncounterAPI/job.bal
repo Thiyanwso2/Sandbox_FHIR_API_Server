@@ -2,6 +2,7 @@ import health.fhir.r4;
 import ballerina/task;
 import ballerina/io;
 import ballerina/time;
+import ballerina/log;
 
 // Creates a job to be executed by the scheduler.
 class Job {
@@ -11,7 +12,6 @@ class Job {
 
     // Executes this function when the scheduled trigger fires.
     public function execute() {
-        io:println("Running...");
         r4:Encounter[] encounters = getAll();
 
         r4:Encounter[] result = from r4:Encounter entry in encounters
@@ -48,4 +48,19 @@ class Job {
 function init() returns error? {
 
     _ = check task:scheduleJobRecurByFrequency(new Job("Data clean up job"), 600);
+
+    // This init method will read some initial encounter resource from a file and initialise the internal map
+
+    log:printDebug("Reading the encounter data from resources/data.json and initialising the in memory encounters map");
+
+    json[]|error encountersArray = <json[]>check io:fileReadJson("resources/data.json");
+
+    if encountersArray is error {
+        log:printError("Something went wrong", encountersArray);
+
+    } else {
+        foreach json res in encountersArray {
+            _ = check addJson(res);
+        }
+    }
 }

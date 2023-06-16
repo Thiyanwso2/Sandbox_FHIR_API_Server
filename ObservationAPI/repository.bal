@@ -11,13 +11,8 @@
 
 import ballerinax/health.fhir.r4;
 import ballerina/random;
-// import ballerina/log;
-// import ballerina/io;
 import ballerina/http;
 import ballerina/time;
-
-// Initializes an `isolated` variable using
-// an `isolated` expression.
 
 isolated map<r4:Observation> data = {};
 
@@ -181,19 +176,3 @@ public isolated function delete(string id) {
         data = clone.clone();
     }
 }
-
-// This init method will read some initial observation resource from a file and initialise the internal map
-// function init() returns error? {
-//     io:print("Reading the observation data from resources/data.json and initialising the in memory observations map");
-
-//     json[]|error observationsArray = <json[]>check io:fileReadJson("resources/data.json");
-
-//     if observationsArray is error {
-//         log:printError("Something went wrong", observationsArray);
-
-//     } else {
-//         foreach json res in observationsArray {
-//             _ = check addJson(res);
-//         }
-//     }
-// }

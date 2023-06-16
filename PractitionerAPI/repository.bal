@@ -11,8 +11,6 @@
 
 import ballerinax/health.fhir.r4;
 import ballerina/random;
-// import ballerina/log;
-// import ballerina/io;
 import ballerina/http;
 import ballerina/time;
 
@@ -170,19 +168,3 @@ public isolated function delete(string id) {
         data = clone.clone();
     }
 }
-
-// This init method will read some initial practitioner resource from a file and initialise the internal map
-// function init() returns error? {
-//     io:print("Reading the practitioner data from resources/data.json and initialising the in memory practitioners map");
-
-//     json[]|error practitionersArray = <json[]>check io:fileReadJson("resources/data.json");
-
-//     if practitionersArray is error {
-//         log:printError("Something went wrong", practitionersArray);
-
-//     } else {
-//         foreach json res in practitionersArray {
-//             _ = check addJson(res);
-//         }
-//     }
-// }
