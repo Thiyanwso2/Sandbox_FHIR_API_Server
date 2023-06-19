@@ -13,6 +13,7 @@ import ballerinax/health.fhir.r4;
 import ballerina/random;
 import ballerina/http;
 import ballerina/time;
+import ballerina/lang.'int as langint;
 
 isolated map<r4:Encounter> data = {};
 
@@ -41,7 +42,9 @@ public isolated function add(r4:Encounter encounter) returns r4:FHIRError|string
                 r4:PROCESSING);
         }
         if data.length() >= 500 {
-            //return error
+            return r4:createFHIRError("Amount of requests have exceeded the limit. Please try again later",
+                r4:ERROR,
+                r4:TRANSIENT_THROTTLED);
         }
 
         string randomId = randomInteger.toBalString();
@@ -81,6 +84,27 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
         encounters = data.clone().toArray();
     }
 
+    // If In-memory patients map is empty skip the search process
+    if encounters.length() == 0 {
+        return encounters;
+    }
+
+    int offset = 0;
+    if (searchParameters.hasKey("_offset")) {
+        int|error fromString = langint:fromString(searchParameters.get("_offset")[0]);
+        if fromString is int {
+            offset = fromString;
+        }
+    }
+
+    int count = 20;
+    if (searchParameters.hasKey("_count")) {
+        int|error fromString = langint:fromString(searchParameters.get("_count")[0]);
+        if fromString is int {
+            count = fromString;
+        }
+    }
+
     //Check whether there any search parameters in the requested search parameter list,
     //other than _count & _offset
     string[] filteredParams = searchParameters.keys().filter(k => k != "_count").filter(k => k != "_offset");
@@ -88,7 +112,11 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
     // If no search parameters other than _count & _offset skip the search process
     if filteredParams.length() == 0 {
         // Apply offset and count here
-        return encounters;
+        if encounters.length() > offset + count {
+            return encounters.slice(offset, offset + count);
+        } else {
+            return encounters.slice(offset);
+        }
     }
 
     // If In-memory encounters map is empty skip the search process
@@ -145,13 +173,17 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
                     filteredList.push(...result);
                 }
             }
-            if filteredList.length() > 20 {
-                break;
-            }
             encounters = filteredList;
+            if encounters.length() > offset + count {
+                return encounters.slice(offset, offset + count);
+            }
         }
     }
-    return encounters;
+    if encounters.length() > offset {
+        return encounters.slice(offset);
+    } else {
+        return [];
+    }
 }
 
 public isolated function getAll() returns r4:Encounter[] {
