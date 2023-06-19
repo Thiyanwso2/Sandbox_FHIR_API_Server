@@ -15,7 +15,7 @@ class Job {
         r4:Observation[] observations = getAll();
 
         r4:Observation[] result = from r4:Observation entry in observations
-            where self.calcDifference(<string>entry["meta"]["lastUpdated"]) >= 7200d
+            where self.calcDifference(<string>entry["meta"]["lastUpdated"]) >= CLEANUP_TIME_DURATION
             select entry;
 
         io:println(result.forEach(function(r4:Observation p) {
@@ -30,7 +30,7 @@ class Job {
         time:Utc|error utc = time:utcFromString(lastUpdated);
 
         if utc is error {
-            return 600d;
+            return CLEANUP_RECUR_FREQUENCY;
         } else {
             time:Utc now = time:utcNow();
             io:println("Now: " + time:utcToString(now));
@@ -47,7 +47,7 @@ class Job {
 
 function init() returns error? {
 
-    _ = check task:scheduleJobRecurByFrequency(new Job("Data clean up job"), 600);
+    _ = check task:scheduleJobRecurByFrequency(new Job("Data clean up job"), CLEANUP_RECUR_FREQUENCY);
 
     // This init method will read some initial observation resource from a file and initialise the internal map
 

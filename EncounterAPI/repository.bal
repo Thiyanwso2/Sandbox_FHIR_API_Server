@@ -34,14 +34,14 @@ isolated function addJson(json encounter) returns r4:FHIRError|string {
 
 public isolated function add(r4:Encounter encounter) returns r4:FHIRError|string {
     lock {
-        int|random:Error randomInteger = random:createIntInRange(100000, 1000000);
+        int|random:Error randomInteger = random:createIntInRange(MIN_RANDOM_INT, MAX_RANDOM_INT);
 
         if randomInteger is random:Error {
             return r4:createFHIRError("Something went wrong while processing the request",
                 r4:ERROR,
                 r4:PROCESSING);
         }
-        if data.length() >= 500 {
+        if data.length() >= MAX_DATA_ITEMS {
             return r4:createFHIRError("Amount of requests have exceeded the limit. Please try again later",
                 r4:ERROR,
                 r4:TRANSIENT_THROTTLED);
@@ -89,7 +89,7 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
         return encounters;
     }
 
-    int offset = 0;
+    int offset = DEFAULT_OFFSET_VALUE;
     if (searchParameters.hasKey("_offset")) {
         int|error fromString = langint:fromString(searchParameters.get("_offset")[0]);
         if fromString is int {
@@ -97,7 +97,7 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
         }
     }
 
-    int count = 20;
+    int count = DEFAULT_COUNT_VALUE;
     if (searchParameters.hasKey("_count")) {
         int|error fromString = langint:fromString(searchParameters.get("_count")[0]);
         if fromString is int {
@@ -174,9 +174,6 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
                 }
             }
             encounters = filteredList;
-            if encounters.length() > offset + count {
-                return encounters.slice(offset, offset + count);
-            }
         }
     }
     if encounters.length() > offset {
