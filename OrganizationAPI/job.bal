@@ -15,7 +15,7 @@ class Job {
         r4:Organization[] organizations = getAll();
 
         r4:Organization[] result = from r4:Organization entry in organizations
-            where self.calcDifference(<string>entry["meta"]["lastUpdated"]) >= CLEANUP_TIME_DURATION
+            where entry["meta"]["lastUpdated"] != "2001-07-15T05:30:29.575+00:00" && self.calcDifference(<string>entry["meta"]["lastUpdated"]) >= CLEANUP_TIME_DURATION
             select entry;
 
         io:println(result.forEach(function(r4:Organization p) {

@@ -15,7 +15,7 @@ class Job {
         r4:Patient[] patients = getAll();
 
         r4:Patient[] result = from r4:Patient entry in patients
-            where self.calcDifference(<string>entry["meta"]["lastUpdated"]) >= CLEANUP_TIME_DURATION
+            where entry["meta"]["lastUpdated"] != "2001-07-15T05:30:29.575+00:00" && self.calcDifference(<string>entry["meta"]["lastUpdated"]) >= CLEANUP_TIME_DURATION
             select entry;
 
         io:println(result.forEach(function(r4:Patient p) {

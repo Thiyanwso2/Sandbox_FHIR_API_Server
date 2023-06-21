@@ -15,7 +15,7 @@ class Job {
         r4:Encounter[] encounters = getAll();
 
         r4:Encounter[] result = from r4:Encounter entry in encounters
-            where self.calcDifference(<string>entry["meta"]["lastUpdated"]) >= CLEANUP_TIME_DURATION
+            where entry["meta"]["lastUpdated"] != "2001-07-15T05:30:29.575+00:00" && self.calcDifference(<string>entry["meta"]["lastUpdated"]) >= CLEANUP_TIME_DURATION
             select entry;
 
         io:println(result.forEach(function(r4:Encounter p) {
