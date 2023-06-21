@@ -11,12 +11,9 @@
 
 import ballerinax/health.fhir.r4;
 import ballerina/random;
-// import ballerina/log;
-// import ballerina/io;
 import ballerina/http;
-
-// Initializes an `isolated` variable using
-// an `isolated` expression.
+import ballerina/time;
+import ballerina/lang.'int as langint;
 
 isolated map<r4:Encounter> data = {};
 
@@ -35,24 +32,25 @@ isolated function addJson(json encounter) returns r4:FHIRError|string {
     }
 }
 
-isolated function add(r4:Encounter encounter) returns r4:FHIRError|string {
+public isolated function add(r4:Encounter encounter) returns r4:FHIRError|string {
     lock {
-        string? id = encounter.id ?: "";
-        if id is "" {
-            int|random:Error randomInteger = random:createIntInRange(100000, 1000000);
+        int|random:Error randomInteger = random:createIntInRange(MIN_RANDOM_INT, MAX_RANDOM_INT);
 
-            if randomInteger is random:Error {
-                return r4:createFHIRError("Something went wrong while processing the request",
+        if randomInteger is random:Error {
+            return r4:createFHIRError("Something went wrong while processing the request",
                 r4:ERROR,
                 r4:PROCESSING);
-            }
-
-            string randomId = randomInteger.toBalString();
-            encounter.id = randomId;
-            data[randomId] = encounter.clone();
-        } else {
-            data[<string>encounter.id] = encounter.clone();
         }
+        if data.length() >= MAX_DATA_ITEMS {
+            return r4:createFHIRError("Amount of requests have exceeded the limit. Please try again later",
+                r4:ERROR,
+                r4:TRANSIENT_THROTTLED);
+        }
+
+        string randomId = randomInteger.toBalString();
+        encounter.id = randomId;
+        encounter.meta.lastUpdated = time:utcToString(time:utcNow());
+        data[randomId] = encounter.clone();
         return <string>encounter.id;
     }
 }
@@ -86,6 +84,27 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
         encounters = data.clone().toArray();
     }
 
+    // If In-memory patients map is empty skip the search process
+    if encounters.length() == 0 {
+        return encounters;
+    }
+
+    int offset = DEFAULT_OFFSET_VALUE;
+    if (searchParameters.hasKey("_offset")) {
+        int|error fromString = langint:fromString(searchParameters.get("_offset")[0]);
+        if fromString is int {
+            offset = fromString;
+        }
+    }
+
+    int count = DEFAULT_COUNT_VALUE;
+    if (searchParameters.hasKey("_count")) {
+        int|error fromString = langint:fromString(searchParameters.get("_count")[0]);
+        if fromString is int {
+            count = fromString;
+        }
+    }
+
     //Check whether there any search parameters in the requested search parameter list,
     //other than _count & _offset
     string[] filteredParams = searchParameters.keys().filter(k => k != "_count").filter(k => k != "_offset");
@@ -93,7 +112,11 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
     // If no search parameters other than _count & _offset skip the search process
     if filteredParams.length() == 0 {
         // Apply offset and count here
-        return encounters;
+        if encounters.length() > offset + count {
+            return encounters.slice(offset, offset + count);
+        } else {
+            return encounters.slice(offset);
+        }
     }
 
     // If In-memory encounters map is empty skip the search process
@@ -153,21 +176,23 @@ public isolated function search(map<string[]> searchParameters) returns r4:FHIRE
             encounters = filteredList;
         }
     }
-    return encounters;
+    if encounters.length() > offset {
+        return encounters.slice(offset);
+    } else {
+        return [];
+    }
 }
 
-// This init method will read some initial encounter resource from a file and initialise the internal map
-// function init() returns error? {
-//     io:print("Reading the encounter data from resources/data.json and initialising the in memory encounters map");
+public isolated function getAll() returns r4:Encounter[] {
+    lock {
+        return data.clone().toArray();
+    }
+}
 
-//     json[]|error encountersArray = <json[]>check io:fileReadJson("resources/data.json");
-
-//     if encountersArray is error {
-//         log:printError("Something went wrong", encountersArray);
-
-//     } else {
-//         foreach json res in encountersArray {
-//             _ = check addJson(res);
-//         }
-//     }
-// }
+public isolated function delete(string id) {
+    lock {
+        map<r4:Encounter> clone = data.clone();
+        _ = clone.hasKey(id) ? clone.remove(id) : "";
+        data = clone.clone();
+    }
+}
