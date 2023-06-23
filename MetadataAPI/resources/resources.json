@@ -1,0 +1,78 @@
+[
+  {
+    "type": "Patient",
+    "versioning": "versioned",
+    "conditionalCreate": false,
+    "conditionalRead": "not-supported",
+    "conditionalUpdate": false,
+    "conditionalDelete": "not-supported",
+    "referencePolicies": ["resolves"],
+    "searchRevIncludes": ["null"],
+    "supportedProfiles": ["http://hl7.org/fhir/StructureDefinition/Patient"],
+    "interactions": ["create", "search-type", "read"],
+    "searchParamString": ["_id", "gender", "active"],
+    "searchParamNumber": ["_offset", "_count"]
+  },
+  {
+    "type": "Encounter",
+    "versioning": "versioned",
+    "conditionalCreate": false,
+    "conditionalRead": "not-supported",
+    "conditionalUpdate": false,
+    "conditionalDelete": "not-supported",
+    "referencePolicies": ["resolves"],
+    "searchRevIncludes": ["null"],
+    "supportedProfiles": ["http://hl7.org/fhir/StructureDefinition/Encounter"],
+    "interactions": ["create", "search-type", "read"],
+    "searchParamString": ["_id", "status", "class"],
+    "searchParamNumber": ["_offset", "_count"]
+  },
+  {
+    "type": "Practitioner",
+    "versioning": "versioned",
+    "conditionalCreate": false,
+    "conditionalRead": "not-supported",
+    "conditionalUpdate": false,
+    "conditionalDelete": "not-supported",
+    "referencePolicies": ["resolves"],
+    "searchRevIncludes": ["null"],
+    "supportedProfiles": [
+      "http://hl7.org/fhir/StructureDefinition/Practitioner"
+    ],
+    "interactions": ["create", "search-type", "read"],
+    "searchParamString": ["_id", "active"],
+    "searchParamNumber": ["_offset", "_count"]
+  },
+  {
+    "type": "Organization",
+    "versioning": "versioned",
+    "conditionalCreate": false,
+    "conditionalRead": "not-supported",
+    "conditionalUpdate": false,
+    "conditionalDelete": "not-supported",
+    "referencePolicies": ["resolves"],
+    "searchRevIncludes": ["null"],
+    "supportedProfiles": [
+      "http://hl7.org/fhir/StructureDefinition/Organization"
+    ],
+    "interactions": ["create", "search-type", "read"],
+    "searchParamString": ["_id", "name", "address-city"],
+    "searchParamNumber": ["_offset", "_count"]
+  },
+  {
+    "type": "Observation",
+    "versioning": "versioned",
+    "conditionalCreate": false,
+    "conditionalRead": "not-supported",
+    "conditionalUpdate": false,
+    "conditionalDelete": "not-supported",
+    "referencePolicies": ["resolves"],
+    "searchRevIncludes": ["null"],
+    "supportedProfiles": [
+      "http://hl7.org/fhir/StructureDefinition/Observation"
+    ],
+    "interactions": ["create", "search-type", "read"],
+    "searchParamString": ["_id", "status", "subject"],
+    "searchParamNumber": ["_offset", "_count"]
+  }
+]
